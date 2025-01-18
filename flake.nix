@@ -3,14 +3,16 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    # FIXME Newer nixpkgs' git breaks our gitRepo hack because of wonky permissions
+    nixpkgs-gitRepo.url = "github:NixOS/nixpkgs/5710852ba686cc1fd0d3b8e22b3117d43ba374c2";
 
     androidPkgs.url = "github:tadfisher/android-nixpkgs/stable";
 
     flake-compat.url = "github:nix-community/flake-compat";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, androidPkgs, flake-compat,  ... }@inputs: let
+  outputs = { self, nixpkgs, androidPkgs, flake-compat,  ... }@inputs: let
     pkgs = import ./pkgs/default.nix { inherit inputs; };
   in {
     # robotnixSystem evaluates a robotnix configuration

@@ -34,7 +34,10 @@ self: super: {
   });
   nix-prefetch-git = super.callPackage ./fetchgit/nix-prefetch-git.nix {};
 
-  gitRepo = super.callPackage ./gitRepo { inherit inputs; };
+  gitRepo = super.callPackage ./gitRepo {
+    inherit (super) gitRepo;
+    old-git = inputs.nixpkgs-gitRepo.legacyPackages.x86_64-linux.git;
+  };
 
   ###
 

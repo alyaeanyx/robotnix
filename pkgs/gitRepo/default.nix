@@ -1,10 +1,5 @@
-{ lib, inputs, fetchFromGitHub, rsync, git, gnupg, less, openssh, ... }:
-let
-  inherit (inputs) nixpkgs-unstable;
-
-  unstablePkgs = nixpkgs-unstable.legacyPackages.x86_64-linux;
-in
-  unstablePkgs.gitRepo.overrideAttrs(oldAttrs: rec {
+{ lib, fetchFromGitHub, gitRepo, rsync, old-git, gnupg, less, openssh, ... }:
+  gitRepo.overrideAttrs(oldAttrs: rec {
     version = "2.45";
 
     src = fetchFromGitHub {
@@ -14,7 +9,7 @@ in
       hash = "sha256-f765TcOHL8wdPa9qSmGegofjCXx1tF/K5bRQnYQcYVc=";
     };
 
-    nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [ rsync  git ];
+    nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [ rsync old-git ];
 
     repo2nixPatches = ./patches;
 
@@ -65,6 +60,6 @@ in
       wrapProgram "$out/bin/repo" \
         --set REPO_URL "file://$out/var/repo" \
         --set REPO_REV "$(cat ./COMMITED_REPO_REV)" \
-        --prefix PATH ":" "${ lib.makeBinPath [ git gnupg less openssh ] }"
+        --prefix PATH ":" "${ lib.makeBinPath [ old-git gnupg less openssh ] }"
     '';
   })
